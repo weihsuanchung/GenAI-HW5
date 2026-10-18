@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>日常小記 | My Little Journal</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Quicksand:wght@500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="container">
+    <!-- 頂部導覽與標題列 -->
+    <header class="app-header">
+      <div class="header-titles">
+        <h1>🌱 日常小記</h1>
+        <p>把每一個值得紀念的微小瞬間收藏起來</p>
+      </div>
+      <button type="button" id="open-settings-btn" class="settings-pill">
+        <span id="sync-status-dot" class="status-dot offline"></span>
+        <span>⚙️ 雲端設定</span>
+      </button>
+    </header>
+
+    <main>
+      <!-- 1. 新增日誌編輯卡片 -->
+      <section class="editor-card">
+        <form id="journal-form">
+          <div class="form-row">
+            <div class="input-group">
+              <label for="entry-date">📅 日期</label>
+              <input type="date" id="entry-date" required>
+            </div>
+            
+            <div class="input-group">
+              <label for="entry-mood">✨ 今日心情</label>
+              <select id="entry-mood">
+                <option value="😊 開心">😊 開心</option>
+                <option value="🌿 平靜">🌿 平靜</option>
+                <option value="🥳 充實">🥳 充實</option>
+                <option value="☕ 慵懶">☕ 慵懶</option>
+                <option value="🌧️ 低落">🌧️ 低落</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- 圖片上傳與預覽 -->
+          <div class="input-group">
+            <label for="entry-image" class="image-upload-btn" id="upload-label">
+              <span id="upload-text">📷 點擊上傳今日照片（選填）</span>
+              <input type="file" id="entry-image" accept="image/*" hidden>
+            </label>
+            <div id="image-preview-container" class="preview-hidden">
+              <img id="image-preview" src="" alt="預覽圖片">
+              <button type="button" id="remove-image-btn" title="移除照片">✕</button>
+            </div>
+          </div>
+
+          <!-- 留言內容 -->
+          <div class="input-group">
+            <label for="entry-content">📝 寫下今天的故事</label>
+            <textarea id="entry-content" rows="4" placeholder="今天發生了什麼有趣的事呢？..." required></textarea>
+          </div>
+
+          <button type="submit" id="submit-btn" class="submit-btn">收進日誌裡 ✨</button>
+        </form>
+      </section>
+
+      <!-- 2. 時光走廊日誌列表 -->
+      <section class="entries-section">
+        <div class="entries-header">
+          <h2>時光走廊</h2>
+          <div class="entries-meta-right">
+            <button type="button" id="refresh-btn" class="icon-btn" title="重新同步雲端日誌">🔄</button>
+            <span id="entry-count">讀取中...</span>
+          </div>
+        </div>
+        <div id="entries-list" class="entries-grid">
+          <!-- JavaScript 動態渲染日誌卡片 -->
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- 3. GitHub 雲端設定彈出視窗 (Modal) -->
+  <div id="settings-modal" class="modal-overlay modal-hidden">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3>⚙️ GitHub 雲端同步設定</h3>
+        <button type="button" id="close-settings-btn" class="close-modal-btn">✕</button>
+      </div>
+      <p class="modal-desc">
+        設定後，新增與刪除日誌（含實體照片）都會直接同步至你的 GitHub Repository，實現跨手機與電腦同步。
+      </p>
+      
+      <form id="settings-form">
+        <div class="form-row">
+          <div class="input-group">
+            <label for="gh-owner">👤 GitHub 帳號 (Owner)</label>
+            <input type="text" id="gh-owner" placeholder="例如: octocat" required>
+          </div>
+          <div class="input-group">
+            <label for="gh-repo">📁 儲存庫名稱 (Repo)</label>
+            <input type="text" id="gh-repo" placeholder="例如: my-journal" required>
+          </div>
+        </div>
+
+        <div class="input-group">
+          <label for="gh-branch">🌿 分支名稱 (Branch)</label>
+          <input type="text" id="gh-branch" value="main" placeholder="預設為 main" required>
+        </div>
+
+        <div class="input-group">
+          <label for="gh-token">🔑 Personal Access Token (僅儲存於本機瀏覽器)</label>
+          <input type="password" id="gh-token" placeholder="github_pat_... 或 ghp_...">
+          <small class="field-hint">
+            ※ 若僅瀏覽日誌可留空；若要新增或刪除日誌，請填入具備此 Repo <code>Contents: Read & Write</code> 權限的 Token。
+          </small>
+        </div>
+
+        <div class="modal-actions">
+          <button type="button" id="clear-settings-btn" class="secondary-btn">清除本機設定</button>
+          <button type="submit" id="save-settings-btn" class="submit-btn modal-save-btn">儲存並同步 ✨</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
